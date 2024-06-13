@@ -5,8 +5,11 @@ CBIL–VHPLI utilizes zero-padding and cropping tricks to turn protein/RNA seque
 ## System Requirements
 
 CBIL‒VHPLI was developed using the Keras API with TensorFlow as a backend. The following dependencies are required:
-- scikit-learn version 0.21.3
-- numpy version 1.17.4
+- TensorFlow version=2.11.1
+- scikit-learn version=1.3.2
+- numpy version=1.24.4
+- Keras version=2.11.0
+- pandas version=2.0.3
 
 ## Content
 
