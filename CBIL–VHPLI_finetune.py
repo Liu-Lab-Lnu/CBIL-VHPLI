@@ -13,7 +13,7 @@ import pandas as pd
 import tensorflow as tf
 from sklearn.metrics import (accuracy_score, auc, average_precision_score,
                              confusion_matrix, f1_score, precision_score,
-                             recall_score, roc_auc_score, roc_curve)
+                             recall_score, roc_auc_score, roc_curve, matthews_corrcoef)
 from sklearn.model_selection import train_test_split
 from tensorflow import keras
 from tensorflow.keras import layers, metrics
@@ -179,6 +179,7 @@ def cal_scores(
     results["specificity"] = tn / (tn + fp)
     results["ppv"] = tp / (tp + fp)
     results["prc_score"] = average_precision_score(y_test, y_pred)
+    results["mcc"] = matthews_corrcoef(y_test, y_pred)
     print(results)
     with open(csv_path, "a") as f:
         f.write(
@@ -456,7 +457,7 @@ def define_model(model_name, max_length_rna, max_length_pro, rna_vocab_size, pro
             outputs=output,
         )
 
-    elif model_name == "ConBL":
+    elif model_name == "CBIL–VHPLI":
         model1 = keras.Sequential(
             [
                 keras.layers.Conv1D(
@@ -542,7 +543,7 @@ def train_all_models(
 ):
     suffix = "pretrained"
     csv_path = "./results/before_fintue_results.csv"
-    for model_name in ['CNN', 'lstm', 'rnn', 'bilstm', 'ConBL']:
+    for model_name in ['CNN', 'lstm', 'rnn', 'bilstm', 'CBIL–VHPLI']:
         model = define_model(model_name, max_length_rna, max_length_pro, rna_vocab_size, protein_vocab_size)
         model.compile(
             loss="binary_crossentropy",
@@ -852,13 +853,7 @@ def finetune(rna_one_hot_X_train, protein_one_hot_X_train, rna_encoding_train, p
     suffix = 'finetune'
     csv_path = './results/finetune_results.csv'
 
-    for model_name in ['CNN', 'lstm', 'rnn', 'bilstm', 'ConBL']:
-        if model_name == 'ConBL':
-            epochs = 40
-        else:
-            epochs = 10
-    # for model_name in ['CNN', 'lstm', 'rnn', 'bilstm']:
-    # for model_name in ['ConBL']:
+    for model_name in ['CNN', 'lstm', 'rnn', 'bilstm', 'CBIL–VHPLI']:
         model = define_model(model_name, max_length_rna, max_length_pro, rna_vocab_size, protein_vocab_size)
         model.compile(loss='binary_crossentropy', optimizer=Adam(learning_rate=lr), metrics=['accuracy', 'AUC'])
         model.load_weights(f'models/{model_name}pretrained.h5')
@@ -885,6 +880,7 @@ def finetune(rna_one_hot_X_train, protein_one_hot_X_train, rna_encoding_train, p
         results['specificity'] = tn / (tn + fp)
         results['ppv'] = tp / (tp + fp)
         results['prc_score'] = average_precision_score(y_val, y_pred)
+        results["mcc"] = matthews_corrcoef(y_val, y_pred)
         print(results)
         with open(csv_path, 'a') as f:
             f.write(
