@@ -895,8 +895,8 @@ def finetune(rna_one_hot_X_train, protein_one_hot_X_train, rna_encoding_train, p
 
 import math
 
-for dataset in ['athinteraction']:
-    data_path = f'./Data/{dataset}.csv'
+for dataset in ['vhRPI286']:
+    data_path = f'./data/vhRPI286/{dataset}.csv'
     lr = 0.001
     max_length_pro = 1000
     max_length_rna = 2500

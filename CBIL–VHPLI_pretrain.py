@@ -886,7 +886,7 @@ def cross_validation(rna_one_hot_X_train, protein_one_hot_X_train, rna_encoding_
 
 
 if __name__ == "__main__":
-    data_path = "./Data/pretrain_data.csv"
+    data_path = "./data/RPI18072/pretrain_data.csv"
     # data_path = "./Data/2241.csv"
     lr = 0.001
     max_length_pro = 1000
